@@ -25,19 +25,11 @@ if (typeof global.navigator === 'undefined') {
   // @ts-ignore
   global.navigator = {};
 }
-
 if (!global.navigator.userAgent) {
-  Object.defineProperty(global.navigator, 'userAgent', {
-    value: 'React-Native',
-    writable: true,
-    configurable: true
-  });
+  // @ts-ignore
+  global.navigator.userAgent = 'React-Native';
 }
-
 if (!global.navigator.platform) {
-  Object.defineProperty(global.navigator, 'platform', {
-    value: 'React-Native',
-    writable: true,
-    configurable: true
-  });
+  // @ts-ignore
+  global.navigator.platform = 'React-Native';
 }
