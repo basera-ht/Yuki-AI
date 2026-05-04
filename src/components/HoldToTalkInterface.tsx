@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, Alert, PermissionsAndroid, Platform } from 'react-native';
 import { Conversation } from '@elevenlabs/client';
+import { Audio } from 'expo-av';
 
 export const HoldToTalkInterface: React.FC = () => {
   const [conversation, setConversation] = useState<any>(null);
@@ -35,9 +36,28 @@ export const HoldToTalkInterface: React.FC = () => {
       }
 
       setStatus('connecting');
-      
+
+      // Set up audio focus before connecting
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+        playThroughEarpieceAndroid: false,
+        staysActiveInBackground: false,
+      });
+
       const conv = await Conversation.startSession({
         agentId: agentId,
+        connectionOptions: {
+          autoSubscribe: true,
+          peerConnectionTimeout: Platform.OS === 'android' ? 30000 : 15000,
+          rtcConfig: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' },
+            ],
+          },
+        },
         onConnect: () => {
           setStatus('connected');
         },

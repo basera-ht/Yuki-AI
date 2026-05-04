@@ -1,6 +1,7 @@
 import 'react-native-url-polyfill/auto';
 import 'react-native-get-random-values';
 import { TextEncoder, TextDecoder } from 'text-encoding';
+import { Platform } from 'react-native';
 
 // @ts-ignore
 global.TextEncoder = TextEncoder;
@@ -16,8 +17,10 @@ const DOMExceptionPolyfill = class DOMException extends Error {
 
 // @ts-ignore
 global.DOMException = global.DOMException || DOMExceptionPolyfill;
-// @ts-ignore
-window.DOMException = window.DOMException || DOMExceptionPolyfill;
+if (Platform.OS === 'web' && typeof window !== 'undefined') {
+  // @ts-ignore
+  window.DOMException = window.DOMException || DOMExceptionPolyfill;
+}
 // @ts-ignore
 globalThis.DOMException = globalThis.DOMException || DOMExceptionPolyfill;
 
